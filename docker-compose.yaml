@@ -1,0 +1,33 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:latest
+    container_name: ip-lookup-db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: ip-lookup-db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/ip-lookup-db
+      DATABASE_NAME: ip-lookup-db
+      DATABASE_USERNAME: postgres
+      DATABASE_PASSWORD: postgres
+      DATABASE_HOST: 127.0.0.1
+      DATABASE_DIALECT: postgres
+      API_URL: http://ipwho.is/
+
+volumes:
+  postgres-data:
