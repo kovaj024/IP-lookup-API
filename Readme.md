@@ -67,6 +67,12 @@ Before running the application, make sure you have the following dependencies in
    docker-compose up
    ```
 
+5. Database Migrations:
+
+   ```bash
+   npm run migrate
+   ``` 
+
 The application should be accessible at [http://localhost:3000](http://localhost:3000).
 
 ## Docker and Deployment

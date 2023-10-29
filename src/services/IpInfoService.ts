@@ -5,21 +5,21 @@ import {IpInfo} from "../interfaces/IpInfo";
 
 class IpInfoService {
     async lookupAndCache(ipAddress: string): Promise<IpInfo> {
-        const cachedResult = await Cache.get(ipAddress);
+        const cachedResult = await this.getCachedResult(ipAddress);
         if (cachedResult) {
             return cachedResult;
         }
 
         const ipInfo = await IpInfoLookup.lookup(ipAddress);
 
-        await Cache.set(ipAddress, ipInfo, 60);
-
-        await IpInfoRepository.save({
+        const response = await IpInfoRepository.save({
             ipAddress: ipAddress,
             data: JSON.stringify(ipInfo),
         });
 
-        return ipInfo;
+        await Cache.set(ipAddress, response, 60);
+
+        return response;
     }
 
     async getCachedResult(ipAddress: string): Promise<IpInfo | null> {
